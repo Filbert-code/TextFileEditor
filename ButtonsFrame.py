@@ -71,12 +71,13 @@ class ButtonsFrame(tk.Frame):
                 return
         # throws exceptions related to dimensions and user inputs
         self.checkDimensions()
-        try:
+        # try:
             # replace the text file text and create an output file in the output directory
-            self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
-        except IndexError:
-            messagebox.showerror("ERROR", "Make sure that the number of characters in the text "
-                                          "field matches the number of column positions selected.")
+        print(str(self.colPositions) + ":" + str(self.rowNumbers))
+        self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
+        # except IndexError:
+        #     messagebox.showerror("ERROR", "Make sure that the number of characters in the text "
+        #                                   "field matches the number of column positions selected.")
 
 
     def replaceClickResetParameters(self):
@@ -107,17 +108,19 @@ class ButtonsFrame(tk.Frame):
         return changed_state
 
     # check to make sure the entry inputs are within the dimensions of the file
+    # returns true if no errors are found
     def checkDimensions(self):
         row_errors = []
-        print(self.rowNumbers)
         for row in self.rowNumbers:
-            if row - 1 < 0 or row - 1 > self.dimensions[0]:
+            if row - 1 < 0 or row - 1 > self.dimensions[1]:
                 row_errors.append(row)
-        if len(row_errors) > 0:
-            messagebox.showerror("ERROR", "These inputted rows are not within the range of rows in the selected file: {} ".format(str(row_errors)) +
-                                          "The text replacement will not include these rows.")
         for error in row_errors:
             self.rowNumbers.remove(error)
+        if len(row_errors) > 0:
+            messagebox.showerror("ERROR", "These inputted rows are not within the range of rows in the selected file:\n{} ".format(str(row_errors)) +
+                                          "\nThe text replacement will not include these rows.")
+            return False
+        return True
 
 
 
