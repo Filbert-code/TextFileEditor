@@ -46,10 +46,8 @@ class ButtonsFrame(tk.Frame):
             self.parent.editor.editNewFile(self.listbox.selected_filename)
             # grab dimensions of the text file
             self.dimensions = self.parent.editor.dimensions[0] - 1, self.parent.editor.dimensions[1] - 1
-
         except TypeError:
             messagebox.showerror("ERROR", "No file was selected from the file list.")
-
 
         # update column positions and row positions based on the checkbox states
         if not self.invoke_col_checkbox_state(self.dimensions):
@@ -63,8 +61,12 @@ class ButtonsFrame(tk.Frame):
         # check for user text entry errors
         handle_user_text_length_error(self.inputFrame.replacing_text_entry.get(), self.colPositions)
 
-        # replace the text file text and create an output file in the output directory
+        # show error message if no row numbers are specified
+        if len(self.rowNumbers) == 0:
+            messagebox.showerror("ERROR", "Make sure to specify the row numbers.")
+            return
         try:
+            # replace the text file text and create an output file in the output directory
             self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
         except IndexError:
             messagebox.showerror("ERROR", "Make sure that the number of characters in the text "
