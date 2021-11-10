@@ -17,6 +17,7 @@ class ButtonsFrame(tk.Frame):
         self.col_errors = []
         self.row_errors = []
         self.dimensions = None
+        self.text = None
 
         # frame configuration
         self.config(bg="lightseagreen", padx=10, height=75, width=300)
@@ -48,6 +49,7 @@ class ButtonsFrame(tk.Frame):
             self.dimensions = self.parent.editor.dimensions[0] - 1, self.parent.editor.dimensions[1] - 1
         except TypeError:
             messagebox.showerror("ERROR", "No file was selected from the file list.")
+            return
 
         # update column positions and row positions based on the checkbox states
         if not self.invoke_col_checkbox_state(self.dimensions):
@@ -59,12 +61,14 @@ class ButtonsFrame(tk.Frame):
         # print("Rows selected: " + str(self.rowNumbers))
 
         # check for user text entry errors
-        handle_user_text_length_error(self.inputFrame.replacing_text_entry.get(), self.colPositions)
+        self.text = self.inputFrame.replacing_text_entry.get()
+        handle_user_text_length_error(self.text, self.colPositions)
 
         # show error message if no row numbers are specified
-        if len(self.rowNumbers) == 0:
-            messagebox.showerror("ERROR", "Make sure to specify the row numbers.")
-            return
+        for name, value in {'column numbers': self.colPositions, 'row numbers': self.rowNumbers, 'text': self.text}.items():
+            if len(value) == 0:
+                messagebox.showerror("ERROR", "Make sure to specify the {}.".format(name))
+                return
         try:
             # replace the text file text and create an output file in the output directory
             self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
