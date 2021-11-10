@@ -69,6 +69,8 @@ class ButtonsFrame(tk.Frame):
             if len(value) == 0:
                 messagebox.showerror("ERROR", "Make sure to specify the {}.".format(name))
                 return
+        # throws exceptions related to dimensions and user inputs
+        self.checkDimensions()
         try:
             # replace the text file text and create an output file in the output directory
             self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
@@ -103,6 +105,21 @@ class ButtonsFrame(tk.Frame):
                     self.rowNumbers.update(set([num for num in range(2, dimensions[1] + 1)]))
                     changed_state = True
         return changed_state
+
+    # check to make sure the entry inputs are within the dimensions of the file
+    def checkDimensions(self):
+        row_errors = []
+        print(self.rowNumbers)
+        for row in self.rowNumbers:
+            if row - 1 < 0 or row - 1 > self.dimensions[0]:
+                row_errors.append(row)
+        if len(row_errors) > 0:
+            messagebox.showerror("ERROR", "These inputted rows are not within the range of rows in the selected file: {} ".format(str(row_errors)) +
+                                          "The text replacement will not include these rows.")
+        for error in row_errors:
+            self.rowNumbers.remove(error)
+
+
 
 
 
