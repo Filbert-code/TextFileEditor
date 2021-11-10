@@ -112,8 +112,8 @@ class Editor:
         self.path = os.getcwd() + "\\"
         # create a files-to-be-processed folder in the working directory if one does not exist
         self.file_input_path = self.path + "files_to_process\\"
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        if not os.path.exists(self.file_input_path):
+            os.makedirs(self.file_input_path)
 
 
 
