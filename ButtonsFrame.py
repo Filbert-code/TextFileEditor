@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox
+
 from Editor import *
 
 
@@ -12,6 +14,9 @@ class ButtonsFrame(tk.Frame):
         self.inputFrame = inputFieldsFrame
         self.colPositions = set()
         self.rowNumbers = set()
+        self.col_errors = []
+        self.row_errors = []
+        self.dimensions = None
 
         # frame configuration
         self.config(bg="lightseagreen", padx=10, height=75, width=300)
@@ -35,33 +40,41 @@ class ButtonsFrame(tk.Frame):
         self.inputFrame.replacing_text_entry.delete(0, len(self.inputFrame.replacing_text_entry.get()))
 
     def replaceClick(self):
-        col_errors = []
-        row_errors = []
+        self.replaceClickResetParameters()
+        # upload a new file to the editor
+        try:
+            self.parent.editor.editNewFile(self.listbox.selected_filename)
+            # grab dimensions of the text file
+            self.dimensions = self.parent.editor.dimensions[0] - 1, self.parent.editor.dimensions[1] - 1
+
+        except TypeError:
+            messagebox.showerror("ERROR", "No file was selected from the file list.")
+
+
+        # update column positions and row positions based on the checkbox states
+        if not self.invoke_col_checkbox_state(self.dimensions):
+            self.col_errors = process_user_col_row_positions(self.inputFrame.columns_to_mod_entry.get(), self.colPositions)
+        if not self.invoke_row_checkbox_state(self.dimensions):
+            self.row_errors = process_user_col_row_positions(self.inputFrame.rows_to_mod_entry.get(), self.rowNumbers)
+
+        # print("Columns selected: " + str(self.colPositions))
+        # print("Rows selected: " + str(self.rowNumbers))
+
+        # check for user text entry errors
+        handle_user_text_length_error(self.inputFrame.replacing_text_entry.get(), self.colPositions)
+
+        # replace the text file text and create an output file in the output directory
+        try:
+            self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
+        except IndexError:
+            messagebox.showerror("ERROR", "Make sure that the number of characters in the text "
+                                          "field matches the number of column positions selected.")
+
+
+    def replaceClickResetParameters(self):
         self.colPositions.clear()
         self.rowNumbers.clear()
         self.parent.editor = Editor()
-        # try:
-        # upload a new file to the editor
-        self.parent.editor.editNewFile(self.listbox.selected_filename)
-        # grab dimensions of the text file
-        dimensions = self.parent.editor.dimensions[0] - 1, self.parent.editor.dimensions[1] - 1
-        # update column positions and row positions based on the checkbox states
-        if not self.invoke_col_checkbox_state(dimensions):
-            col_errors = process_user_col_row_positions(self.inputFrame.columns_to_mod_entry.get(), self.colPositions)
-        if not self.invoke_row_checkbox_state(dimensions):
-            row_errors = process_user_col_row_positions(self.inputFrame.rows_to_mod_entry.get(), self.rowNumbers)
-        print("Columns selected: " + str(self.colPositions))
-        print("Rows selected: " + str(self.rowNumbers))
-        # check for user text entry errors
-        handle_user_text_length_error(self.inputFrame.replacing_text_entry.get(), self.colPositions)
-        print("Column/row Errors: " + str(col_errors) + " | " + str(row_errors))
-        # replace the text file text and create an output file in the output directory
-        self.parent.editor.replaceText(self.colPositions, self.rowNumbers, self.inputFrame.replacing_text_entry.get())
-        # except TypeError:
-        #     messagebox.showerror("ERROR", "No file was selected from the file list.")
-        # except:
-        #     print("uh oh!")
-        # print("No file was selected.")
 
     def invoke_col_checkbox_state(self, dimensions):
         for key, value in self.parent.checkbox_state.items():
