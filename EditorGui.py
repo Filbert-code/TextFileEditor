@@ -26,6 +26,7 @@ class EditorGui(tk.Frame):
         # states
         self.checkbox_state = {
             "baseId": False,
+            "date": False,
             "header": False,
             "base": False,
             "trailer": False,

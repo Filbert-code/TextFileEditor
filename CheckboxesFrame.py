@@ -14,6 +14,7 @@ class CheckboxesFrame(tk.Frame):
 
         # widgets for this frame
         self.segmentId_checkB = None
+        self.date_checkB = None
         self.headerId_checkB = None
         self.header_checkB = None
         self.base_seg_checkB = None
@@ -33,7 +34,16 @@ class CheckboxesFrame(tk.Frame):
                                                offrelief=RAISED,
                                                overrelief=GROOVE,
                                                font=("Courier", 12))
-        self.segmentId_checkB.grid(row=0, column=0, pady=9)
+        self.segmentId_checkB.grid(row=0, column=0, pady=5, sticky='w')
+        self.date_checkB = tk.Checkbutton(self.colCheckboxFrame,
+                                          text="Replace Date",
+                                          command=lambda: self.update_checkbox_state("date"),
+                                          variable=tk.IntVar(),
+                                          indicatoron=0,
+                                          offrelief=RAISED,
+                                          overrelief=GROOVE,
+                                          font=("Courier", 12))
+        self.date_checkB.grid(row=1, column=0, pady=5)
         self.header_checkB = tk.Checkbutton(self.rowCheckboxFrame,
                                             text="Header",
                                             command=lambda: self.update_checkbox_state("header"),
@@ -41,7 +51,7 @@ class CheckboxesFrame(tk.Frame):
                                             indicatoron=0,
                                             offrelief=RAISED,
                                             overrelief=GROOVE,
-                                            font=("Courier", 12)).grid(row=1, column=0, pady=9)
+                                            font=("Courier", 12)).grid(row=2, column=0, pady=5)
         self.base_seg_checkB = tk.Checkbutton(self.rowCheckboxFrame,
                                               text="Base",
                                               command=lambda: self.update_checkbox_state("base"),
@@ -49,7 +59,7 @@ class CheckboxesFrame(tk.Frame):
                                               indicatoron=0,
                                               offrelief=RAISED,
                                               overrelief=GROOVE,
-                                              font=("Courier", 12)).grid(row=1, column=1, pady=9)
+                                              font=("Courier", 12)).grid(row=2, column=1, pady=5)
         self.trailer_checkB = tk.Checkbutton(self.rowCheckboxFrame,
                                              text="Trailer",
                                              command=lambda: self.update_checkbox_state("trailer"),
@@ -57,7 +67,7 @@ class CheckboxesFrame(tk.Frame):
                                              indicatoron=0,
                                              offrelief=RAISED,
                                              overrelief=GROOVE,
-                                             font=("Courier", 12)).grid(row=1, column=2, pady=9)
+                                             font=("Courier", 12)).grid(row=2, column=2, pady=5)
 
     def update_checkbox_state(self, name):
         if not self.parent.checkbox_state[name]:

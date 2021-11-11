@@ -12,7 +12,7 @@ class InputFieldsFrame(tk.Frame):
         self.characters_needed = 0
 
         # frame configuration
-        self.config(bg="lightseagreen", padx=5, height=175, width=530)
+        self.config(bg="blue", padx=5, height=175, width=530)
         self.grid_propagate(0)
 
         # widgets for this frame
@@ -30,22 +30,27 @@ class InputFieldsFrame(tk.Frame):
 
     def createTextFields(self):
         self.columns_to_mod_label = tk.Label(self, text="Columns to Modify:", font=("Courier", 12), relief=RAISED) \
-                                      .grid(row=0, column=0, padx=5, pady=10, sticky='e')
+                                      .grid(row=0, column=0, padx=5, pady=5, sticky='e')
         self.columns_to_mod_entry = tk.Entry(self, font=("Courier", 12), width=30, bg='lightcyan', disabledbackground='slategrey')
-        self.columns_to_mod_entry.grid(sticky=E, row=0, column=1)
+        self.columns_to_mod_entry.grid(row=0, column=1)
+
+        self.date_mod_label = tk.Label(self, text="Date to Modify:", font=("Courier", 12), relief=RAISED)
+        self.date_mod_label.grid(row=1, column=0, padx=5, pady=5, sticky='e')
+        self.date_mod_entry = tk.Entry(self, font=("Courier", 12), width=30, bg='lightcyan', disabledbackground='slategrey', state='disabled')
+        self.date_mod_entry.grid(row=1, column=1, padx=5, pady=10, sticky='e')
 
         self.rows_to_mod_label = tk.Label(self, text="Rows to Modify:", font=("Courier", 12), relief=RAISED) \
-                                   .grid(row=1, column=0, padx=5, pady=10, sticky='e')
+                                   .grid(row=2, column=0, padx=5, pady=5, sticky='e')
         self.rows_to_mod_entry = tk.Entry(self, font=("Courier", 12), width=30, bg='lightcyan', disabledbackground='slategrey')
-        self.rows_to_mod_entry.grid(row=1, column=1)
+        self.rows_to_mod_entry.grid(row=2, column=1)
 
         self.replacing_text_label = tk.Label(self, text="Replacing Text:", font=("Courier", 12), relief=RAISED) \
-                                      .grid(row=2, column=0, padx=5, pady=10, sticky='e')
+                                      .grid(row=3, column=0, padx=5, pady=5, sticky='e')
         self.replacing_text_entry = tk.Entry(self, font=("Courier", 12), width=30, bg='lightcyan')
-        self.replacing_text_entry.grid(row=2, column=1)
+        self.replacing_text_entry.grid(row=3, column=1)
 
         self.text_length_info_label = tk.Label(self, text="Characters Needed: 0", bg="lightseagreen")
-        self.text_length_info_label.grid(sticky=W, row=3, column=1)
+        self.text_length_info_label.grid(sticky=W, row=4, column=1)
 
 # update the character count label
     def update_self(self):
