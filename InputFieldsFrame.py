@@ -12,7 +12,7 @@ class InputFieldsFrame(tk.Frame):
         self.characters_needed = 0
 
         # frame configuration
-        self.config(bg="blue", padx=5, height=175, width=530)
+        self.config(bg="lightseagreen", padx=5, height=175, width=530)
         self.grid_propagate(0)
 
         # widgets for this frame
@@ -56,8 +56,6 @@ class InputFieldsFrame(tk.Frame):
     def update_self(self):
         self.text_length_info_label.config(text="Characters Needed: {}".format(str(self.characters_needed)),
                                            font=("Courier", 12))
-        self.changeEntryState()
-
         # update the text_length_info_label
         output = set()
         try:
@@ -68,6 +66,8 @@ class InputFieldsFrame(tk.Frame):
                 self.characters_needed = self.parent.characters_needed_state - len(self.replacing_text_entry.get())
         except:
             pass
+
+        self.changeEntryState()
 
         self.parent.parent.after(100, self.update_self)
 
@@ -83,6 +83,12 @@ class InputFieldsFrame(tk.Frame):
                     self.parent.characters_needed_state = len(range(21, 42))
                 else:
                     self.columns_to_mod_entry.config(state=tk.NORMAL)
+            elif key == "date":
+                if value:
+                    self.date_mod_entry.config(state=tk.NORMAL)
+                    self.characters_needed = 8 - len(self.replacing_text_entry.get())
+                else:
+                    self.date_mod_entry.config(state=tk.DISABLED)
             elif key == "header" or key == "base" or key == "trailer":
                 if not value:
                     row_state_addition += 1

@@ -3,6 +3,9 @@ import re
 
 # process user input by checking if the input matches a regular expression. If no matches are found, the string is
 # put into a error array and returned at the end
+import tkinter.messagebox
+
+
 def process_user_col_row_positions(positions, output):
     errors = []
     inputRegex = "(\d*)|(\d*-\d*)"
@@ -23,6 +26,25 @@ def process_user_col_row_positions(positions, output):
                 output.add(int(pos))
     return errors
 
+#
+def process_user_date_col_input(position):
+    inputRegex = "\d.*"
+    match = re.match(inputRegex, position)
+    if match.group(0) == '':
+        raise ValueError
+    else:
+        return set([num for num in range(int(position), int(position) + 8)])
+
+# check the user inputted date to make sure it's properly formatted
+# return true if no errors are found
+def process_user_date_replace_input(date):
+    inputRegex = "\d{8}"
+    match = re.match(inputRegex, date)
+    print("date: {}...match: {}".format(date, match))
+    if match.group(0) != date:
+        raise ValueError
+
+
 
 def handle_user_col_row_input_errors(errors, data_type):
     if len(errors) > 0:
@@ -33,11 +55,9 @@ def handle_user_col_row_input_errors(errors, data_type):
 
 def handle_user_text_length_error(text, colPositions):
     if len(text) != len(colPositions):
-        print("Length of inputted text does not match the number of column positions given:")
-        print("{}: length {}".format(text, len(text)))
-        print("Col Positions: {}: length {}".format(colPositions, len(colPositions)))
-        return 1
-    return 0
+        tkinter.messagebox.showerror('ERROR', "Length of inputted text does not match the number of column positions given.")
+        return True
+    return False
 
 class Editor:
 
@@ -82,6 +102,27 @@ class Editor:
             self.file_string_array[row_num - 1] = string
         # create a new text file with the replacement text applied
         self.createOutputFile()
+
+    def find_and_replace_date(self, replacing_date, new_date, rows, position):
+        valid_rows = []
+        invalid_rows = []
+        for row in rows:
+            row_string = self.file_string_array[row - 1]
+            if row_string[position:position + 8] == replacing_date:
+                valid_rows.append(row)
+                self.file_string_array[row - 1] = row_string[:position] + new_date + row_string[position + 8:]
+            else:
+                # the date was not found. With more than 8 errors, return a 'more than 8 errors message'
+                invalid_rows.append(row)
+        print('hi')
+        if len(invalid_rows) > 8:
+            return 'Rows {} and more did not contain the date specified.\n' \
+                   'Successfully updated {} dates.'.format(invalid_rows[:8], len(valid_rows))
+        elif len(invalid_rows) == 0:
+            return 'Successfully updated {} dates.'.format(len(valid_rows))
+        else:
+            return 'Rows {} did not contain the date specified.\n' \
+                   'Successfully updated {} dates.'.format(invalid_rows[:8], len(valid_rows))
 
 
     # create a map of column numbers to text characters
