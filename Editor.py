@@ -106,6 +106,8 @@ class Editor:
     def find_and_replace_date(self, replacing_date, new_date, rows, position):
         valid_rows = []
         invalid_rows = []
+        # positions comes in as 1-indexed, convert it to 0-indexed
+        position -= 1
         for row in rows:
             row_string = self.file_string_array[row - 1]
             if row_string[position:position + 8] == replacing_date:
@@ -114,7 +116,7 @@ class Editor:
             else:
                 # the date was not found. With more than 8 errors, return a 'more than 8 errors message'
                 invalid_rows.append(row)
-        print('hi')
+        self.createOutputFile()
         if len(invalid_rows) > 8:
             return 'Rows {} and more did not contain the date specified.\n' \
                    'Successfully updated {} dates.'.format(invalid_rows[:8], len(valid_rows))
@@ -123,6 +125,8 @@ class Editor:
         else:
             return 'Rows {} did not contain the date specified.\n' \
                    'Successfully updated {} dates.'.format(invalid_rows[:8], len(valid_rows))
+        # create a new text file with the replacement text applied
+
 
 
     # create a map of column numbers to text characters

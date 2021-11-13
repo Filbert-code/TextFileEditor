@@ -83,13 +83,15 @@ class ButtonsFrame(tk.Frame):
             out_message = self.parent.editor.find_and_replace_date(self.inputFrame.date_mod_entry.get(),
                                                                    self.inputFrame.replacing_text_entry.get(),
                                                                    self.rowNumbers,
-                                                                   self.colPositions)
+                                                                   min(self.colPositions))
             print(out_message)
             messagebox.showinfo('Message', out_message)
-            self.isReplacingDate = True
+            self.isReplacingDate = False
         else:
             self.parent.editor.replaceText(self.colPositions, self.rowNumbers,
                                            self.inputFrame.replacing_text_entry.get())
+            messagebox.showinfo('Message', 'Text replacement successful!\nFind output in the \'processed\' '
+                                           'folder in the directory.')
         # except IndexError:
         #     messagebox.showerror("ERROR", "Make sure that the number of characters in the text "
         #                                   "field matches the number of column positions selected.")
@@ -110,8 +112,11 @@ class ButtonsFrame(tk.Frame):
                     try:
                         process_user_date_replace_input(date)
                         self.colPositions = process_user_date_col_input(self.inputFrame.columns_to_mod_entry.get())
+                        self.isReplacingDate = True
                     except ValueError:
                         messagebox.showerror("ERROR", "Either Date or column entered was not valid.\n{}".format(date))
+                    except AttributeError:
+                        messagebox.showerror("ERROR", "Either the date or starting column position was not entered.")
         return False
 
     def invoke_row_checkbox_state(self, dimensions):
